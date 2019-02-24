@@ -38,7 +38,7 @@ function writeNewTerm() {
                 <option value="AND" selected>AND</option>
                 <option value="OR" disabled>OR</option>
             </select>
-            <button type="button" class="btn btn-danger btn-sm" style="float: left;" onclick="removeTerm(${newId})">Remove</button>
+            <button type="button" class="btn btn-danger btn-sm" style="float: left; margin-top: 2px;" onclick="removeTerm(${newId})">Remove</button>
         </div>
         <div class="clearfix"></div>
         <br/>`);
@@ -82,3 +82,5 @@ function formatTerm(term) {
 function isSpecialTerm(term) {
     return term.indexOf(" ") > 0 || term.indexOf("-") > 0;
 }
+
+function 
