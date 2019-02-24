@@ -33,12 +33,12 @@ function writeNewTerm() {
     var newId = currentId + 1;
     $(`#row-${currentId}`).append(
         `<div>
-            <input type="text" class="form-control col-sm-8" placeholder="Input term" name="term${newId}" style="float: left; margin-right: 5px" id="term${newId}"/>
-            <select class="form-control col-sm-3" id="operator${newId}" name="operator${newId}" style="float: left; margin-right: 5px">
+            <input onkeyup="updateString()" type="text" class="form-control col-sm-8" placeholder="Input term" name="term-${currentId}" style="float: left; margin-right: 5px" id="term-${currentId}"/>
+            <select onchange="updateString()" class="form-control col-sm-3" id="operator-${currentId}" name="operator-${currentId}" style="float: left; margin-right: 5px">
                 <option value="AND" selected>AND</option>
-                <option value="OR" disabled>OR</option>
+                <option value="OR">OR</option>
             </select>
-            <button type="button" class="btn btn-danger btn-sm" style="float: left;" onclick="removeTerm(${newId})">Remove</button>
+            <button type="button" class="btn btn-danger btn-sm" style="float: left;" onclick="removeTerm(${currentId})">Remove</button>
         </div>
         <div class="clearfix"></div>
         <br/>`);
@@ -52,17 +52,9 @@ function writeNewTerm() {
 function removeTerm(id) {
     if (terms[id - 1]) {
         terms[id - 1].show = false;
-        $(`#row-${id - 1}`).empty();
+        $(`#row-${id}`).empty();
     }
-}
-
-function generateStringSearch() {
-    for (var i = 0; i < terms.length; i++) {
-        if (terms[i].show) {
-            console.log($(`#term${i}`).val());
-            console.log($(`#operator${i}`).val());
-        }
-    }
+    updateString();
 }
 
 /**
@@ -81,4 +73,20 @@ function formatTerm(term) {
  */
 function isSpecialTerm(term) {
     return term.indexOf(" ") > 0 || term.indexOf("-") > 0;
+}
+
+
+function updateString() {
+    var consult = '(';
+    var last = terms.filter(f => f.show);
+    for (var i = 0; i < terms.length; i++) {
+        if (terms[i].show) {
+            consult += `"data-field":` + " " + formatTerm($(`#term-${terms[i].id}`).val()) + " ";
+            if (terms[i].id != last[last.length - 1].id)
+                consult += $(`#operator-${terms[i].id}`).val() + " ";
+        }
+    }
+    consult += ')';
+
+    $("#string").html(getDataField(consult).trim());
 }
